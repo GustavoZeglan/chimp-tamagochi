@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         paddingHorizontal: 16,
+        gap: 16
     }
 })
 
@@ -15,7 +16,8 @@ export default function StartPage() {
     return (
         <>
             <View style={styles.container}>
-                <Button text={"Meus macacos"}/>
+                <Button onPress={() => console.log("Novo Macaco")} text={"Novo Macaco"} isPrimary={true}/>
+                <Button onPress={() => console.log("Meus Macacos")} text={"Meus macacos"} isPrimary={false}/>
             </View>
         </>
     )
