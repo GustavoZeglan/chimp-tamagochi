@@ -14,8 +14,12 @@ const styles = StyleSheet.create({
         display: "flex",
         alignItems: "center",
         borderRadius: 8,
-        color: "#fff",
+    },
+    Text: {
+        paddingTop: 10,
         fontSize: 16,
+        color: "#373030",
+        fontFamily: "PressStart2P"
     }
 })
 
@@ -23,7 +27,7 @@ export const Button = ({text, onPress, isPrimary}: ButtonProps) => {
     return (
         <>
             <View style={styles.container}>
-                <Text>{text}</Text>
+                <Text style={styles.Text}>{text}</Text>
             </View>
         </>
     )
