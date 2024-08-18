@@ -1,7 +1,7 @@
 import {StyleSheet, View} from "react-native";
 import {Button} from "@/components/Button";
 import React from "react";
-import Header from "@/components/Header/Header";
+import Header from "@/components/Header";
 
 
 const styles = StyleSheet.create({
@@ -20,12 +20,11 @@ export default function StartPage() {
             <Header title={"Adotar novo Macaco"}>
 
             </Header>
-            {/*
+
             <View style={styles.container}>
                 <Button onPress={() => console.log("Novo Macaco")} text={"Novo Macaco"} isPrimary={true}/>
                 <Button onPress={() => console.log("Meus Macacos")} text={"Meus macacos"} isPrimary={false}/>
             </View>
-            */}
         </>
     )
 }

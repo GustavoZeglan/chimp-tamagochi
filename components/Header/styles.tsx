@@ -1,7 +1,7 @@
 import {StyleSheet} from "react-native";
 
 
-const headerStyle = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         display: "flex",
         flexDirection: "row",
@@ -36,7 +36,7 @@ const headerIconStyle =  StyleSheet.create({
 
 
 export {
-    headerStyle,
+    styles,
     headerTextStyle,
     headerIconStyle
 }

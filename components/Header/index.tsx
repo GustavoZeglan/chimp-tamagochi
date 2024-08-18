@@ -1,9 +1,8 @@
 import {Image, Text, View} from "react-native";
-import {headerIconStyle, headerStyle, headerTextStyle} from "@/components/Header/HeaderStyle";
+import {headerIconStyle, styles, headerTextStyle} from "@/components/Header/styles";
 
-
-
-const openDoorIcon = require("../../assets/images/openDoorIcon.png")
+// @ts-ignore
+import openDoorIcon from "../../assets/images/openDoorIcon.png";
 
 interface HeaderProps {
     title: string;
@@ -11,7 +10,7 @@ interface HeaderProps {
 
 const Header = ({title} : HeaderProps) => {
     return (
-        <View style={headerStyle.container}>
+        <View style={styles.container}>
             <Text style={headerTextStyle.primaryText}>{title}</Text>
             <View style={headerIconStyle.container}>
                 <Image source={openDoorIcon}></Image>
