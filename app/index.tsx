@@ -1,18 +1,34 @@
-import {StyleSheet, View} from "react-native";
+import {StyleSheet, View, Text, SafeAreaView, Image} from "react-native";
 import {Button} from "@/components/Button";
 import React from "react";
-import Header from "@/components/Header";
-import { MonkeyDisplay } from "@/components/MonkeyDisplay";
-import { Monkey } from "@/models/Monkey";
-
 
 const styles = StyleSheet.create({
-    container: {
+    Container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
+        flexDirection: 'column',
+        justifyContent: "space-evenly",
         paddingHorizontal: 16,
-        gap: 16
+        gap: 16,
+        backgroundColor: "#262B44",
+    },
+    Title: {
+        fontFamily: "PressStart2P",
+        fontSize: 28,
+        color: "white",
+    },
+    Paragraph: {
+        color: "white",
+        fontFamily: "PressStart2P",
+        fontSize: 16,
+        textAlign: "center",
+        lineHeight: 24,
+    },
+    ButtonsContainer: {
+        display: "flex",
+        gap: 16,
+        flexDirection: "column",
+        width: "100%"
     }
 })
 
@@ -20,22 +36,15 @@ const styles = StyleSheet.create({
 
 export default function StartPage() {
 
-    const monkey = {
-        name: "Cleitin",
-        idleImg: "../../assets/images/macacopoolIdle.mp4"
-    } as Monkey
-
     return (
-        <>
-            <Header title={"Adotar novo Macaco"}>
-
-            </Header>
-
-            <View style={styles.container}>
-                {/* <Button onPress={() => console.log("Novo Macaco")} text={"Novo Macaco"} isPrimary={true}/> */}
-                {/* <Button onPress={() => console.log("Meus Macacos")} text={"Meus macacos"} isPrimary={false}/> */}
-                <MonkeyDisplay monkey={monkey}/>
+        <SafeAreaView style={styles.Container}>
+            <Text style={styles.Title}>Macacogochi</Text>
+            <Text style={styles.Paragraph}>Não se Esqueça de Cuidar dos Macaquinhos, eles precisam de você.</Text>
+            <View style={styles.ButtonsContainer}>
+                <Button text="Novo Macaco" isPrimary={true} onPress={() => console.log("Novo Macaco")}/>
+                <Button text="Meus Macacos" isPrimary={false} onPress={() => console.log("Meus Macacos")}/>
             </View>
-        </>
+            <Image source={require("../assets/images/banana.png")}/>
+        </SafeAreaView>
     )
 }
