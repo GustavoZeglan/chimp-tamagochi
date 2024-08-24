@@ -1,6 +1,6 @@
 
 
-export interface Monkey {
+export type Monkey = {
     name: string,
     runningImg: string,
     idleImg: string,

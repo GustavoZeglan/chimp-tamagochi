@@ -3,6 +3,7 @@ import {Button} from "@/components/Button";
 import React from "react";
 import Header from "@/components/Header";
 import { MonkeyDisplay } from "@/components/MonkeyDisplay";
+import { Monkey } from "@/models/Monkey";
 
 
 const styles = StyleSheet.create({
@@ -18,6 +19,12 @@ const styles = StyleSheet.create({
 
 
 export default function StartPage() {
+
+    const monkey = {
+        name: "Cleitin",
+        idleImg: "../../assets/images/macacopoolIdle.mp4"
+    } as Monkey
+
     return (
         <>
             <Header title={"Adotar novo Macaco"}>
@@ -27,7 +34,7 @@ export default function StartPage() {
             <View style={styles.container}>
                 {/* <Button onPress={() => console.log("Novo Macaco")} text={"Novo Macaco"} isPrimary={true}/> */}
                 {/* <Button onPress={() => console.log("Meus Macacos")} text={"Meus macacos"} isPrimary={false}/> */}
-                <MonkeyDisplay/>
+                <MonkeyDisplay monkey={monkey}/>
             </View>
         </>
     )
