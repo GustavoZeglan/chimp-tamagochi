@@ -4,6 +4,7 @@ import React from "react";
 import Header from "@/components/Header";
 import { MonkeyDisplay } from "@/components/MonkeyDisplay";
 import { Monkey } from "@/models/Monkey";
+import PlayButton from "@/components/PlayButton";
 
 
 const styles = StyleSheet.create({
@@ -32,9 +33,7 @@ export default function StartPage() {
             </Header>
 
             <View style={styles.container}>
-                {/* <Button onPress={() => console.log("Novo Macaco")} text={"Novo Macaco"} isPrimary={true}/> */}
-                {/* <Button onPress={() => console.log("Meus Macacos")} text={"Meus macacos"} isPrimary={false}/> */}
-                <MonkeyDisplay monkey={monkey}/>
+                <PlayButton title="Pega Banana" onPress={() => console.log("Bah...")}/>
             </View>
         </>
     )
