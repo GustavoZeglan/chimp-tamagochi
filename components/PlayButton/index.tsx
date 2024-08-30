@@ -1,6 +1,6 @@
 import { ImageBackground, View, Text, TouchableHighlight, TouchableOpacity } from "react-native";
 import { styles } from "./styles";
-import { Href, Link, useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 
 interface PlayButtonInterface {
     title: string,
