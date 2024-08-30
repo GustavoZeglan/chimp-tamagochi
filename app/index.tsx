@@ -46,8 +46,8 @@ export default function StartPage() {
             <Text style={styles.Title}>Macacogochi</Text>
             <Text style={styles.Paragraph}>Não se Esqueça de Cuidar dos Macaquinhos, eles precisam de você.</Text>
             <View style={styles.ButtonsContainer}>
-                <Button text="Novo Macaco" isPrimary={true} onPress={() => console.log("Novo Macaco")}/>
-                <Button text="Meus Macacos" isPrimary={false} onPress={() => console.log("Meus Macacos")}/>
+                <Button text="Novo Macaco" isPrimary={true} href={"/game_center"}/>
+                <Button text="Meus Macacos" isPrimary={false} href={"/game_center"}/>
             </View>
             <Image source={require("../assets/images/banana.png")}/>
         </SafeAreaView>
