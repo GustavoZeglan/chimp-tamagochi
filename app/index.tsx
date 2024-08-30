@@ -33,7 +33,7 @@ export default function StartPage() {
             </Header>
 
             <View style={styles.container}>
-                <PlayButton title="Pega Banana" onPress={() => console.log("Bah...")}/>
+                <PlayButton title="Pega Banana" href="/game_center"/>
             </View>
         </>
     )
