@@ -1,0 +1,101 @@
+import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import Header from "@/components/Header";
+import StatusCard from "@/components/StatusCard/StatusCard";
+import {MonkeyDisplay} from "@/components/MonkeyDisplay";
+import {Monkey} from "@/models/Monkey";
+import {Tabs} from "expo-router";
+import StackNavigator from "@react-navigation/stack/src/navigators/createStackNavigator";
+
+const monkey = {
+    name: "Cleitin",
+    idleImg: "../assets/images/macacopoolIdle.mp4"
+} as Monkey
+
+const monkeyDetails = () => {
+    return (
+        <SafeAreaView style={styles.container}>
+            <Header title={"Sala de Cuidados"}></Header>
+            <View style={styles.statusCardContainer}>
+                <StatusCard status={"Fome"} image={require("../assets/images/food.png")} value={54}></StatusCard>
+                <StatusCard status={"Sono"} image={require("../assets/images/Bed.png")} value={54}></StatusCard>
+                <StatusCard status={"Emoção"} image={require("../assets/images/Smiling.png")} value={54}></StatusCard>
+            </View>
+            <View style={styles.monkeyInfoContainer}>
+                <Text style={styles.textStatus}>Feliz</Text>
+                <MonkeyDisplay monkey={monkey}></MonkeyDisplay>
+                <Text style={styles.monkeyName}>Sheila</Text>
+            </View>
+            <View style={styles.interactionContainer}>
+
+                <TouchableOpacity style={styles.interaction} onPress={()=>console.log("teste123")}>
+                    <Image source={require("../assets/images/foodWhite.png")}></Image>
+                    <Text style={styles.interactionText}>Alimentar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.interaction}  onPress={()=>console.log("teste456")}>
+                    <Image source={require("../assets/images/sleepicon.png")}></Image>
+                    <Text style={styles.interactionText}>Dormir</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.interaction} onPress={()=>console.log("teste789")}>
+                    <Image source={require("../assets/images/playicon.png")}></Image>
+                    <Text style={styles.interactionText}>Brincar</Text>
+                </TouchableOpacity>
+
+            </View>
+        </SafeAreaView>
+
+    )
+}
+
+const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        backgroundColor: "#262b44",
+        fontFamily: "PressStart2P"
+    },
+    statusCardContainer: {
+        display: "flex",
+        flexDirection: "row",
+        gap: 8,
+        justifyContent: "center",
+        margin: 32
+    },
+    monkeyInfoContainer: {
+        display: "flex",
+        alignItems: "center"
+    },
+    textStatus: {
+        fontFamily: "PressStart2P",
+        color: "white",
+        fontSize: 18,
+    },
+    monkeyName: {
+        fontFamily: "PressStart2P",
+        color: "white",
+        fontSize: 18,
+    },
+    interactionContainer: {
+        width: "100%",
+        display:"flex",
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        position: "absolute",
+        bottom: 0,
+        padding: 16,
+        backgroundColor: "#3f2832",
+    },
+    interaction:{
+        display:"flex",
+        alignItems: "center",
+        gap:8
+    },
+    interactionText:{
+        color: "white",
+        fontFamily: "PressStart2P",
+        fontSize: 10
+    }
+
+});
+
+export default monkeyDetails;
