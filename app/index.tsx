@@ -1,9 +1,6 @@
-import { StyleSheet, View } from "react-native";
+import {StyleSheet, View, Text, SafeAreaView, Image} from "react-native";
+import {Button} from "@/components/Button";
 import React from "react";
-import Header from "@/components/Header";
-import { MonkeyDisplay } from "@/components/MonkeyDisplay";
-import { Monkeys } from "@/mock/monkeys";
-
 
 const styles = StyleSheet.create({
     Container: {
@@ -40,16 +37,14 @@ const styles = StyleSheet.create({
 export default function StartPage() {
 
     return (
-        <>
-            <Header title={"Adotar novo Macaco"}>
-
-            </Header>
-
-            <View style={styles.Container}>
-                {/* <Button onPress={() => console.log("Novo Macaco")} text={"Novo Macaco"} isPrimary={true}/> */}
-                {/* <Button onPress={() => console.log("Meus Macacos")} text={"Meus macacos"} isPrimary={false}/> */}
-                <MonkeyDisplay monkey={Monkeys[3]}/>
+        <SafeAreaView style={styles.Container}>
+            <Text style={styles.Title}>Macacogochi</Text>
+            <Text style={styles.Paragraph}>Não se Esqueça de Cuidar dos Macaquinhos, eles precisam de você.</Text>
+            <View style={styles.ButtonsContainer}>
+                <Button text="Novo Macaco" isPrimary={true} href={"/monkeyDetails"}/>
+                <Button text="Meus Macacos" isPrimary={false} href={"/game_center"}/>
             </View>
-        </>
+            <Image source={require("../assets/images/banana.png")}/>
+        </SafeAreaView>
     )
 }

@@ -34,6 +34,7 @@ export default function RootLayout() {
         {/*<Stack.Screen name="(tabs)" options={{ headerShown: false }} />*/}
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="game_center" options={{headerShown: false}}/>
+        <Stack.Screen name="monkeyDetails" options={{headerShown: false}}/>
       </Stack>
     </ThemeProvider>
   );

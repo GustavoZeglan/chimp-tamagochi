@@ -2,14 +2,7 @@ import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "rea
 import Header from "@/components/Header";
 import StatusCard from "@/components/StatusCard/StatusCard";
 import {MonkeyDisplay} from "@/components/MonkeyDisplay";
-import {Monkey} from "@/models/Monkey";
-import {Tabs} from "expo-router";
-import StackNavigator from "@react-navigation/stack/src/navigators/createStackNavigator";
-
-const monkey = {
-    name: "Cleitin",
-    idleImg: "../assets/images/macacopoolIdle.mp4"
-} as Monkey
+import { Monkeys } from "@/mock/monkeys";
 
 const monkeyDetails = () => {
     return (
@@ -22,7 +15,7 @@ const monkeyDetails = () => {
             </View>
             <View style={styles.monkeyInfoContainer}>
                 <Text style={styles.textStatus}>Feliz</Text>
-                <MonkeyDisplay monkey={monkey}></MonkeyDisplay>
+                <MonkeyDisplay monkey={Monkeys[2]}></MonkeyDisplay>
                 <Text style={styles.monkeyName}>Sheila</Text>
             </View>
             <View style={styles.interactionContainer}>
@@ -57,7 +50,7 @@ const styles = StyleSheet.create({
     statusCardContainer: {
         display: "flex",
         flexDirection: "row",
-        gap: 8,
+        gap: 16,
         justifyContent: "center",
         margin: 32
     },
