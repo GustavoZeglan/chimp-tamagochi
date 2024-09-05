@@ -21,17 +21,17 @@ const monkeyDetails = () => {
             <View style={styles.interactionContainer}>
 
                 <TouchableOpacity style={styles.interaction} onPress={()=>console.log("teste123")}>
-                    <Image source={require("../assets/images/foodWhite.png")}></Image>
-                    <Text style={styles.interactionText}>Alimentar</Text>
+                    <Image source={require("../assets/images/foods/beer.png")}></Image>
+                    <Text style={styles.interactionText}>Comer</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.interaction}  onPress={()=>console.log("teste456")}>
-                    <Image source={require("../assets/images/sleepicon.png")}></Image>
+                    <Image source={require("../assets/images/sleep.png")}></Image>
                     <Text style={styles.interactionText}>Dormir</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.interaction} onPress={()=>console.log("teste789")}>
-                    <Image source={require("../assets/images/playicon.png")}></Image>
+                    <Image source={require("../assets/images/controller.png")}></Image>
                     <Text style={styles.interactionText}>Brincar</Text>
                 </TouchableOpacity>
 
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         width: "100%",
         display:"flex",
         flexDirection: "row",
-        justifyContent: "space-evenly",
+        justifyContent: "space-around",
         position: "absolute",
         bottom: 0,
         padding: 16,
