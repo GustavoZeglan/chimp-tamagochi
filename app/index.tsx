@@ -1,12 +1,8 @@
-import {StyleSheet, View, Text, SafeAreaView, Image} from "react-native";
-import {Button} from "@/components/Button";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import Header from "@/components/Header";
 import { MonkeyDisplay } from "@/components/MonkeyDisplay";
-import { Monkey } from "@/models/Monkey";
-import PlayButton from "@/components/PlayButton";
-import MonkeyDetails from "@/app/monkeyDetails";
-
+import { Monkeys } from "@/mock/monkeys";
 
 
 const styles = StyleSheet.create({
@@ -44,6 +40,16 @@ const styles = StyleSheet.create({
 export default function StartPage() {
 
     return (
-        <MonkeyDetails></MonkeyDetails>
+        <>
+            <Header title={"Adotar novo Macaco"}>
+
+            </Header>
+
+            <View style={styles.Container}>
+                {/* <Button onPress={() => console.log("Novo Macaco")} text={"Novo Macaco"} isPrimary={true}/> */}
+                {/* <Button onPress={() => console.log("Meus Macacos")} text={"Meus macacos"} isPrimary={false}/> */}
+                <MonkeyDisplay monkey={Monkeys[3]}/>
+            </View>
+        </>
     )
 }
