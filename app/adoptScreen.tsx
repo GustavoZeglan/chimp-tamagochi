@@ -3,16 +3,45 @@ import Header from "@/components/Header";
 import {MonkeyDisplay} from "@/components/MonkeyDisplay";
 import {Monkeys} from "@/mock/monkeys";
 import { Button } from "@/components/Button";
+import { useState } from "react";
+import { useRouter } from "expo-router";
+import { MonkeyAssets } from "@/models/Monkey";
+import useChimpDatabase from "@/database/chimpService";
 
 const adoptScreen = () => {
+
+    const navigation = useRouter();
+
+    const [name, setName] = useState<string>("");
+    const [skin, setSkin] = useState<number>();
+    const { createChimp, getLastChimp } = useChimpDatabase();
+
+    const create = async () => {
+        try {
+            if (skin) {
+                await createChimp({name, skin});
+                const chimp = await getLastChimp();
+                navigation.push({pathname: "/monkeyDetails", params:{id: chimp?.id}});
+            }
+
+
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    const handleSkin = (index: number) => {
+        setSkin(index);
+    }
+
     return (
         <SafeAreaView style={styles.screenStyle}>
             <Header title={"Adotar novo Macaco"}></Header>
             <View style={styles.skinContainer}>
                 <Text style={styles.skinText}>Selecione a Aparência</Text>
                 <View style={styles.skinSelectionContainer}>
-                    <FlatList horizontal={true} data={Monkeys} renderItem={({item}) => (
-                        <TouchableOpacity>
+                    <FlatList horizontal={true} data={Monkeys} renderItem={({item, index}) => (
+                        <TouchableOpacity onPress={() => handleSkin(index)}>
                             <MonkeyDisplay monkey={item}></MonkeyDisplay>
                         </TouchableOpacity>
                     )}>
@@ -23,8 +52,9 @@ const adoptScreen = () => {
             <View style={styles.adoptContainer}>
                 <TextInput style={styles.inputName}
                            placeholder={"Insira o nome do macaquinho"}
-                           placeholderTextColor={"white"}></TextInput>
-                <Button isPrimary={true} text="Adotar" href={"/monkeyDetails"}/>
+                           placeholderTextColor={"white"} 
+                           onChangeText={setName}></TextInput>
+                <Button isPrimary={true} text="Adotar" onPress={create}/>
             </View>
         </SafeAreaView>
     )

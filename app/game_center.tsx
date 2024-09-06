@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button";
 import PlayButton from "@/components/PlayButton";
-import { Link } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
+import { Href, useRouter } from "expo-router";
 
 
 const styles = StyleSheet.create({
@@ -23,12 +23,20 @@ const styles = StyleSheet.create({
 })
 
 export default function GameCenter() {
+
+    const navigation = useRouter();
+    
+
+    const handleNavigate = (route: Href) => {
+        navigation.push(route);
+    }
+
     return (
         <View style={styles.Container}>
             <Text style={styles.Title}>Macaqueie comigo</Text>
-            <PlayButton href="/" title="Jogo da Memória" />
-            <PlayButton href="/" title="Pega Banana" />
-            <Button href={"/"} text="Voltar" isPrimary={false}/>
+            <PlayButton onPress={() => handleNavigate("/")} title="Jogo da Memória" />
+            <PlayButton onPress={() => handleNavigate("/")} title="Pega Banana" />
+            <Button onPress={() => handleNavigate("/")} text="Voltar" isPrimary={false}/>
         </View>
     );
 }

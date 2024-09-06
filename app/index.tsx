@@ -1,6 +1,7 @@
 import {StyleSheet, View, Text, SafeAreaView, Image} from "react-native";
 import {Button} from "@/components/Button";
 import React from "react";
+import { Href, useRouter } from "expo-router";
 
 const styles = StyleSheet.create({
     Container: {
@@ -36,13 +37,20 @@ const styles = StyleSheet.create({
 
 export default function StartPage() {
 
+    const navigation = useRouter();
+    
+
+    const handleNavigate = (route: Href) => {
+        navigation.push(route);
+    }
+
     return (
         <SafeAreaView style={styles.Container}>
             <Text style={styles.Title}>Macacogochi</Text>
             <Text style={styles.Paragraph}>Não se Esqueça de Cuidar dos Macaquinhos, eles precisam de você.</Text>
             <View style={styles.ButtonsContainer}>
-                <Button text="Novo Macaco" isPrimary={true} href={"/adoptScreen"}/>
-                <Button text="Meus Macacos" isPrimary={false} href={"/game_center"}/>
+                <Button text="Novo Macaco" isPrimary={true} onPress={() => handleNavigate("/adoptScreen")}/>
+                <Button text="Meus Macacos" isPrimary={false} onPress={() => handleNavigate("/game_center")}/>
             </View>
             <Image source={require("../assets/images/banana.png")}/>
         </SafeAreaView>

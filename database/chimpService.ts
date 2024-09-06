@@ -1,18 +1,27 @@
+import { Monkey } from "@/models/Monkey";
 import { useSQLiteContext } from "expo-sqlite";
 
 export function useChimpDatabase() {
     
     const db = useSQLiteContext();
 
-    const createChimp = async ({name, imgPath, hungry, sleep, fun}: {name: string, imgPath: string, hungry: number, sleep: number, fun: number}) => {
+    const createChimp = async ({name, skin}: {name: string, skin: number}) => {
 
         const statement = await db.prepareAsync(`
-            INSERT INTO Todo(name, imgPath, hungry, sleep, fun) VALUES ($name, $imgPath, $hungry, $sleep, $fun);
+            INSERT INTO chimp(name, skin, hungry, sleep, fun, lastUpdate) VALUES ($name, $skin, 75, 75, 75, $lastUpdate);
         `);
 
+        const date = new Date().toLocaleString('pt-BR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          });
 
         try {
-            await statement.executeAsync({$name:name, $imgPath:imgPath, $hungry: hungry, $sleep: sleep, $fun: fun});
+            await statement.executeAsync({$name:name, $skin:skin, $lastUpdate: date});
         } catch (e) {
             console.error(e);
         } finally {
@@ -31,7 +40,18 @@ export function useChimpDatabase() {
         }
     }
 
-    return { createChimp, getChimps }
+    async function getLastChimp() {
+        try {
+            const response = await db.getFirstAsync<Monkey>(`SELECT * FROM chimp ORDER BY id DESC LIMIT 1;`);
+            console.log(response);
+            
+            return response;
+        } catch(e) {
+            throw e;
+        }
+    }
+
+    return { createChimp, getChimps, getLastChimp }
 
 }
 

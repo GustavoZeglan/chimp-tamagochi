@@ -5,10 +5,11 @@ export async function initDatabase(db: SQLiteDatabase) {
         CREATE TABLE IF NOT EXISTS chimp ( 
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             name TEXT,
-            imgPath TEXT,
+            skin INTEGER,
             hungry INTEGER,
             sleep INTEGER,
-            fun INTEGER
+            fun INTEGER,
+            lastUpdate DATETIME DEFAULT CURRENT_TIMESTAMP
         );
     `);
 }

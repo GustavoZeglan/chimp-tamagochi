@@ -1,8 +1,13 @@
 import {AVPlaybackSource} from "expo-av";
 
 export type Monkey = {
+    id: number,
     name: string,
-    assets: MonkeyAssets
+    skin: number,
+    fun: number,
+    sleep: number,
+    hungry: number,
+    lastUpdate: Date,
 }
 
 export interface MonkeyAssets {
