@@ -1,4 +1,4 @@
-import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, ImageSourcePropType, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Header from "@/components/Header";
 import StatusCard from "@/components/StatusCard/StatusCard";
 import {MonkeyDisplay} from "@/components/MonkeyDisplay";
@@ -7,12 +7,14 @@ import { useGlobalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import useChimpDatabase from "@/database/chimpService";
 import { Monkey } from "@/models/Monkey";
+import { Foods } from "@/mock/foods";
 
 const monkeyDetails = () => {
 
     const { id } = useGlobalSearchParams();
     const { getChimpById, updateHungry } = useChimpDatabase();
     const [monkey, setMonkey] = useState<Monkey>();
+    const [food, setFood] = useState<number>(1);
 
     const getChimp = useCallback(async (id: number) => {
         try {
@@ -30,13 +32,19 @@ const monkeyDetails = () => {
     const handleHungry = async (id:number) => {
         try {
 
+            if (monkey?.hungry && monkey.hungry == 100) {
+                return;
+            } 
+            
             if (monkey?.hungry && monkey.hungry + 10 >= 100) {
                 await updateHungry(id, 100);  
+                handleFood();
                 getChimp(id);
                 return;
             }
 
-            await updateHungry(id, monkey!.hungry + 10);  
+            await updateHungry(id, monkey!.hungry + 10);
+            handleFood();  
             getChimp(id);
 
         } catch(e) {
@@ -44,9 +52,18 @@ const monkeyDetails = () => {
         }
     };
 
+    const handleFood = () => {
+        let newNumber;
+        do {
+            newNumber = Math.floor(Math.random() * (Foods.length + 1));
+            console.log(newNumber);
+        } while (newNumber === food);
+        setFood(newNumber);
+    }
+
     useEffect(() => {
         getChimp(Number(id));
-    }, [id]);
+    }, [id, food]);
 
 
     return (
@@ -65,7 +82,7 @@ const monkeyDetails = () => {
             <View style={styles.interactionContainer}>
 
                 <TouchableOpacity style={styles.interaction} onPress={() => handleHungry(Number(id))}>
-                    <Image source={require("../assets/images/foods/beer.png")}></Image>
+                    <Image source={Foods[food]}></Image>
                     <Text style={styles.interactionText}>Comer</Text>
                 </TouchableOpacity>
 
