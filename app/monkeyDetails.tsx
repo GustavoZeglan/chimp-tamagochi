@@ -3,20 +3,46 @@ import Header from "@/components/Header";
 import StatusCard from "@/components/StatusCard/StatusCard";
 import {MonkeyDisplay} from "@/components/MonkeyDisplay";
 import { Monkeys } from "@/mock/monkeys";
+import { useGlobalSearchParams } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import useChimpDatabase from "@/database/chimpService";
+import { Monkey } from "@/models/Monkey";
 
 const monkeyDetails = () => {
+
+    const { id } = useGlobalSearchParams();
+    const { getChimpById } = useChimpDatabase();
+    const [monkey, setMonkey] = useState<Monkey>();
+
+    const getChimp = useCallback(async () => {
+        try {
+
+            const res = await getChimpById(id as string);  
+            if (res) {
+                setMonkey(res);
+            }
+
+        } catch(e) {
+            console.error(e);
+        }
+    },[]);
+
+    useEffect(() => {
+        getChimp()
+    }, [id]);
+
     return (
         <SafeAreaView style={styles.container}>
             <Header title={"Sala de Cuidados"}></Header>
             <View style={styles.statusCardContainer}>
-                <StatusCard status={"Fome"} image={require("../assets/images/food.png")} value={54}></StatusCard>
-                <StatusCard status={"Sono"} image={require("../assets/images/Bed.png")} value={54}></StatusCard>
-                <StatusCard status={"Emoção"} image={require("../assets/images/Smiling.png")} value={54}></StatusCard>
+                <StatusCard status={"Fome"} image={require("../assets/images/food.png")} value={monkey?.hungry ?? 0}></StatusCard>
+                <StatusCard status={"Sono"} image={require("../assets/images/Bed.png")} value={monkey?.sleep ?? 0}></StatusCard>
+                <StatusCard status={"Emoção"} image={require("../assets/images/Smiling.png")} value={monkey?.fun ?? 0}></StatusCard>
             </View>
             <View style={styles.monkeyInfoContainer}>
                 <Text style={styles.textStatus}>Feliz</Text>
-                <MonkeyDisplay monkey={Monkeys[2]}></MonkeyDisplay>
-                <Text style={styles.monkeyName}>Sheila</Text>
+                <MonkeyDisplay monkey={Monkeys[monkey?.skin ?? 0]}></MonkeyDisplay>
+                <Text style={styles.monkeyName}>{monkey?.name}</Text>
             </View>
             <View style={styles.interactionContainer}>
 

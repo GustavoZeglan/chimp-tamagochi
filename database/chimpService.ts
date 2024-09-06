@@ -31,7 +31,7 @@ export function useChimpDatabase() {
 
     async function getChimps() {
         try {
-            const response = await db.getAllAsync<any>(`SELECT * FROM chimp;`);
+            const response = await db.getAllAsync<Monkey[]>(`SELECT * FROM chimp;`);
             console.log(response);
             
             return response;
@@ -43,7 +43,6 @@ export function useChimpDatabase() {
     async function getLastChimp() {
         try {
             const response = await db.getFirstAsync<Monkey>(`SELECT * FROM chimp ORDER BY id DESC LIMIT 1;`);
-            console.log(response);
             
             return response;
         } catch(e) {
@@ -51,7 +50,18 @@ export function useChimpDatabase() {
         }
     }
 
-    return { createChimp, getChimps, getLastChimp }
+    async function getChimpById(id: string) {
+        try {
+            const query = `SELECT * FROM chimp WHERE id = ?`;
+            const res = await db.getFirstAsync<Monkey>(query, id);
+            
+            return res;
+        } catch(e) {
+            throw e;
+        }
+    }
+
+    return { createChimp, getChimps, getLastChimp, getChimpById }
 
 }
 
