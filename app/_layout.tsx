@@ -1,41 +1,88 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import {FlatList, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import Header from "@/components/Header";
+import {MonkeyDisplay} from "@/components/MonkeyDisplay";
+import {Monkeys} from "@/mock/monkeys";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    PressStart2P: require('../assets/fonts/PressStart2P-Regular.ttf'),
-  });
+const adoptScreen = () => {
+    return (
+        <SafeAreaView style={styles.screenStyle}>
+            <Header title={"Adotar novo Macaco"}></Header>
+            <View style={styles.skinContainer}>
+                <Text style={styles.skinText}>Selecione a Aparência</Text>
+                <View style={styles.skinSelectionContainer}>
+                    <FlatList horizontal={true} data={Monkeys} renderItem={({item}) => (
+                        <TouchableOpacity>
+                            <MonkeyDisplay monkey={item}></MonkeyDisplay>
+                        </TouchableOpacity>
+                    )}>
+                    </FlatList>
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{headerShown: false}}  />
-        {/*<Stack.Screen name="(tabs)" options={{ headerShown: false }} />*/}
-        <Stack.Screen name="+not-found" />
-        <Stack.Screen name="game_center" options={{headerShown: false}}/>
-        <Stack.Screen name="monkeyDetails" options={{headerShown: false}}/>
-      </Stack>
-    </ThemeProvider>
-  );
+                </View>
+            </View>
+            <View style={styles.adoptContainer}>
+                <TextInput style={styles.inputName}
+                           placeholder={"Insira o nome do macaquinho"}
+                           placeholderTextColor={"white"}></TextInput>
+                <TouchableOpacity style={styles.adoptButton}>
+                    <Text style={styles.adoptText}>Adotar</Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
+    )
 }
+
+
+const styles = StyleSheet.create({
+    screenStyle: {
+        flex: 1,
+        backgroundColor: "#262b44",
+    },
+    skinContainer: {
+        margin: 32,
+        display: "flex",
+        alignItems: "center",
+        gap: 8
+    },
+    skinSelectionContainer: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    skinText: {
+        color: "white",
+        fontFamily: "PressStart2P",
+        fontSize: 20,
+        textAlign: "center"
+    },
+    adoptContainer: {
+        display: "flex",
+        gap: 8
+        ,
+        alignItems: "center"
+    },
+    inputName: {
+        backgroundColor: "#7f8ea7",
+        padding: 8,
+        borderRadius: 6,
+        width: "80%"
+    },
+    adoptButton: {
+        backgroundColor : "#cfa740",
+        width: "80%",
+        padding: 8,
+        borderRadius: 6
+    },
+    adoptText: {
+        color: "white",
+        fontFamily: "PressStart2P",
+        fontSize: 12,
+        textAlign: "center"
+    },
+    skins: {
+        backgroundColor: "blue"
+    }
+
+})
+export default adoptScreen;
