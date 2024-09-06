@@ -50,7 +50,7 @@ export function useChimpDatabase() {
         }
     }
 
-    async function getChimpById(id: string) {
+    async function getChimpById(id: number) {
         try {
             const query = `SELECT * FROM chimp WHERE id = ?`;
             const res = await db.getFirstAsync<Monkey>(query, id);
@@ -61,7 +61,20 @@ export function useChimpDatabase() {
         }
     }
 
-    return { createChimp, getChimps, getLastChimp, getChimpById }
+    async function updateHungry(id: number, hungry: number) {
+        
+        const statement = await db.prepareAsync(`UPDATE chimp SET hungry = $hungry WHERE id = $id`);
+        
+        try {
+            await statement.executeAsync({$hungry:hungry, $id:id});
+        } catch(e) {
+            throw e;
+        } finally {
+            statement.finalizeSync();
+        }
+    }
+
+    return { createChimp, getChimps, getLastChimp, getChimpById, updateHungry }
 
 }
 

@@ -11,13 +11,13 @@ import { Monkey } from "@/models/Monkey";
 const monkeyDetails = () => {
 
     const { id } = useGlobalSearchParams();
-    const { getChimpById } = useChimpDatabase();
+    const { getChimpById, updateHungry } = useChimpDatabase();
     const [monkey, setMonkey] = useState<Monkey>();
 
-    const getChimp = useCallback(async () => {
+    const getChimp = useCallback(async (id: number) => {
         try {
 
-            const res = await getChimpById(id as string);  
+            const res = await getChimpById(id);  
             if (res) {
                 setMonkey(res);
             }
@@ -25,11 +25,29 @@ const monkeyDetails = () => {
         } catch(e) {
             console.error(e);
         }
-    },[]);
+    },[monkey]);
+
+    const handleHungry = async (id:number) => {
+        try {
+
+            if (monkey?.hungry && monkey.hungry + 10 >= 100) {
+                await updateHungry(id, 100);  
+                getChimp(id);
+                return;
+            }
+
+            await updateHungry(id, monkey!.hungry + 10);  
+            getChimp(id);
+
+        } catch(e) {
+            console.error(e);
+        }
+    };
 
     useEffect(() => {
-        getChimp()
+        getChimp(Number(id));
     }, [id]);
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -46,12 +64,12 @@ const monkeyDetails = () => {
             </View>
             <View style={styles.interactionContainer}>
 
-                <TouchableOpacity style={styles.interaction} onPress={()=>console.log("teste123")}>
+                <TouchableOpacity style={styles.interaction} onPress={() => handleHungry(Number(id))}>
                     <Image source={require("../assets/images/foods/beer.png")}></Image>
                     <Text style={styles.interactionText}>Comer</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.interaction}  onPress={()=>console.log("teste456")}>
+                <TouchableOpacity style={styles.interaction}  onPress={() => console.log("Bah...")}>
                     <Image source={require("../assets/images/sleep.png")}></Image>
                     <Text style={styles.interactionText}>Dormir</Text>
                 </TouchableOpacity>
