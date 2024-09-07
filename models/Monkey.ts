@@ -1,4 +1,5 @@
-import {AVPlaybackSource} from "expo-av";
+// import {Image} from "expo-av";
+import { Image, ImageBackground, ImageBackgroundProps } from "react-native";
 
 export type Monkey = {
     id: number,
@@ -11,10 +12,10 @@ export type Monkey = {
 }
 
 export interface MonkeyAssets {
-    idle: AVPlaybackSource,
-    sitting: AVPlaybackSource,
-    sit: AVPlaybackSource,
-    cry: AVPlaybackSource,
-    running: NodeRequire,
-    jump: AVPlaybackSource
+    idle: ImageBackgroundProps,
+    sitting: ImageBackgroundProps,
+    sit: ImageBackgroundProps,
+    cry: ImageBackgroundProps,
+    // running: NodeRequire,
+    // jump: ImageBackgroundProps
 }
