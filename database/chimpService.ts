@@ -32,7 +32,6 @@ export function useChimpDatabase() {
     async function getChimps() {
         try {
             const response = await db.getAllAsync<Monkey>(`SELECT * FROM chimp;`);
-            console.log(response);
             
             return response;
         } catch(e) {

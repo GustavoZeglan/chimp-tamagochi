@@ -42,7 +42,7 @@ const monkeyList = () => {
                 contentContainerStyle={{padding:16,display:"flex",gap:16}}
                 data={monkeys}
                 renderItem={({item, index}) => (
-                    <TouchableOpacity onPress={() => handleNavigate("/monkeyDetails")}>
+                    <TouchableOpacity onPress={() => handleNavigate({pathname: "/monkeyDetails", params: {id: item.id}})}>
                        <CardMonkey monkey={item}></CardMonkey>
                     </TouchableOpacity>
             )}>
