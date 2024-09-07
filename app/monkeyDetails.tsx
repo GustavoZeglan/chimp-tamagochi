@@ -1,4 +1,4 @@
-import {Image, ImageSourcePropType, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, ImageBackgroundProps, ImageSourcePropType, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Header from "@/components/Header";
 import StatusCard from "@/components/StatusCard/StatusCard";
 import {MonkeyDisplay} from "@/components/MonkeyDisplay";
@@ -12,9 +12,12 @@ import { Foods } from "@/mock/foods";
 const monkeyDetails = () => {
 
     const { id } = useGlobalSearchParams();
-    const { getChimpById, updateHungry } = useChimpDatabase();
+    const { getChimpById, updateHungry, updateSleep } = useChimpDatabase();
     const [monkey, setMonkey] = useState<Monkey>();
     const [food, setFood] = useState<number>(1);
+    const [image, setImage] = useState<ImageBackgroundProps>(Monkeys[monkey?.skin ?? 0].idle);
+    const [isSleeping, setIsSleeping] = useState<boolean>(false);
+    const [sleepStatus, setSleepStatus] = useState<number>(0);
 
     const getChimp = useCallback(async (id: number) => {
         try {
@@ -22,6 +25,8 @@ const monkeyDetails = () => {
             const res = await getChimpById(id);  
             if (res) {
                 setMonkey(res);
+                setImage(Monkeys[res.skin].idle);
+                setSleepStatus(res.sleep);
             }
 
         } catch(e) {
@@ -61,22 +66,57 @@ const monkeyDetails = () => {
         setFood(newNumber);
     }
 
+    const sleep = useCallback(async (id: number, n: number) => {
+        await updateSleep(id, n);
+    }, []);
+
     useEffect(() => {
         getChimp(Number(id));
     }, [id, food]);
 
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+    
+        if (isSleeping) {
+            interval = setInterval(() => {
+                setSleepStatus((prevSeconds) => prevSeconds + 1);
+            }, 3000); // 3000 milissegundos = 3 segundos
+        
+            sleep(monkey?.id ?? 0, sleepStatus);
+        }
+        
+        return () => clearInterval(interval);  // Certifique-se de limpar o intervalo
+    }, [isSleeping]);
+
+    const handleSleep = () => {
+
+        if (!isSleeping) {
+            setImage(Monkeys[monkey?.skin ?? 0].sitting);
+
+            setTimeout(() => {
+                setImage(Monkeys[monkey?.skin ?? 0].sit);
+            }, 2000); // 2000 milissegundos = 2 segundos
+
+            setIsSleeping(true);
+            return;    
+        } 
+          
+        setImage(Monkeys[monkey?.skin ?? 0].idle);
+        setIsSleeping(false);
+        return;
+    }
 
     return (
         <SafeAreaView style={styles.container}>
             <Header title={"Sala de Cuidados"}></Header>
             <View style={styles.statusCardContainer}>
                 <StatusCard status={"Fome"} image={require("../assets/images/food.png")} value={monkey?.hungry ?? 0}></StatusCard>
-                <StatusCard status={"Sono"} image={require("../assets/images/Bed.png")} value={monkey?.sleep ?? 0}></StatusCard>
+                <StatusCard status={"Sono"} image={require("../assets/images/Bed.png")} value={sleepStatus}></StatusCard>
                 <StatusCard status={"Emoção"} image={require("../assets/images/Smiling.png")} value={monkey?.fun ?? 0}></StatusCard>
             </View>
             <View style={styles.monkeyInfoContainer}>
                 <Text style={styles.textStatus}>Feliz</Text>
-                <MonkeyDisplay image={Monkeys[monkey?.skin ?? 0].idle}></MonkeyDisplay>
+                <MonkeyDisplay image={image}></MonkeyDisplay>
                 <Text style={styles.monkeyName}>{monkey?.name}</Text>
             </View>
             <View style={styles.interactionContainer}>
@@ -86,7 +126,7 @@ const monkeyDetails = () => {
                     <Text style={styles.interactionText}>Comer</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.interaction}  onPress={() => console.log("Bah...")}>
+                <TouchableOpacity style={styles.interaction}  onPress={() => handleSleep()}>
                     <Image source={require("../assets/images/sleep.png")}></Image>
                     <Text style={styles.interactionText}>Dormir</Text>
                 </TouchableOpacity>

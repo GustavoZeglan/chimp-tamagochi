@@ -73,7 +73,22 @@ export function useChimpDatabase() {
         }
     }
 
-    return { createChimp, getChimps, getLastChimp, getChimpById, updateHungry }
+    async function updateSleep(id: number, sleep: number) {
+
+        const statement = await db.prepareAsync(`UPDATE chimp SET sleep = $sleep WHERE id = $id`);
+        
+        try {
+            await statement.executeAsync({$sleep:sleep, $id:id});
+        } catch(e) {
+            throw e;
+        } finally {
+            statement.finalizeSync();
+        }
+
+    }
+
+
+    return { createChimp, getChimps, getLastChimp, getChimpById, updateHungry, updateSleep }
 
 }
 
