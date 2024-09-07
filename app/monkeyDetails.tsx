@@ -76,7 +76,7 @@ const monkeyDetails = () => {
             </View>
             <View style={styles.monkeyInfoContainer}>
                 <Text style={styles.textStatus}>Feliz</Text>
-                <MonkeyDisplay monkey={Monkeys[monkey?.skin ?? 0]}></MonkeyDisplay>
+                <MonkeyDisplay image={Monkeys[monkey?.skin ?? 0].idle}></MonkeyDisplay>
                 <Text style={styles.monkeyName}>{monkey?.name}</Text>
             </View>
             <View style={styles.interactionContainer}>

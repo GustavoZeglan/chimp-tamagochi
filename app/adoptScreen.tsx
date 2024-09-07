@@ -5,7 +5,6 @@ import {Monkeys} from "@/mock/monkeys";
 import { Button } from "@/components/Button";
 import { useState } from "react";
 import { useRouter } from "expo-router";
-import { MonkeyAssets } from "@/models/Monkey";
 import useChimpDatabase from "@/database/chimpService";
 
 const adoptScreen = () => {
@@ -42,7 +41,7 @@ const adoptScreen = () => {
                 <View style={styles.skinSelectionContainer}>
                     <FlatList horizontal={true} data={Monkeys} renderItem={({item, index}) => (
                         <TouchableOpacity onPress={() => handleSkin(index)}>
-                            <MonkeyDisplay monkey={item}></MonkeyDisplay>
+                            <MonkeyDisplay image={item.idle}></MonkeyDisplay>
                         </TouchableOpacity>
                     )}>
                     </FlatList>
