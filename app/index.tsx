@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 export default function StartPage() {
 
     const navigation = useRouter();
-    
+
 
     const handleNavigate = (route: Href) => {
         navigation.push(route);
@@ -50,7 +50,7 @@ export default function StartPage() {
             <Text style={styles.Paragraph}>Não se Esqueça de Cuidar dos Macaquinhos, eles precisam de você.</Text>
             <View style={styles.ButtonsContainer}>
                 <Button text="Novo Macaco" isPrimary={true} onPress={() => handleNavigate("/adoptScreen")}/>
-                <Button text="Meus Macacos" isPrimary={false} onPress={() => handleNavigate("/game_center")}/>
+                <Button text="Meus Macacos" isPrimary={false} onPress={() => handleNavigate("/monkeyList")}/>
             </View>
             <Image source={require("../assets/images/banana.png")}/>
         </SafeAreaView>
