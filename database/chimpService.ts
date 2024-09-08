@@ -75,7 +75,7 @@ export function useChimpDatabase() {
 
     async function updateFun(id: number, fun: number) {
         const query = await db.prepareAsync(`
-            INSERT INTO chimp SET fun = $fun WHERE id = $id
+            UPDATE INTO chimp SET fun = $fun WHERE id = $id
         `);
         try{
             await query.executeAsync({$id:id,$fun:fun});
