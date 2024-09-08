@@ -34,7 +34,7 @@ export default function GameCenter() {
     return (
         <View style={styles.Container}>
             <Text style={styles.Title}>Macaqueie comigo</Text>
-            <PlayButton onPress={() => handleNavigate("/")} title="Jogo da Memória" />
+            <PlayButton onPress={() => handleNavigate("/rockPaperScissorGame")} title="Pedra Papel Tesoura" />
             <PlayButton onPress={() => handleNavigate("/")} title="Pega Banana" />
             <Button onPress={() => handleNavigate("/")} text="Voltar" isPrimary={false}/>
         </View>

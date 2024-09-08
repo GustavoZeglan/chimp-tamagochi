@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import StatusCard from "@/components/StatusCard/StatusCard";
 import {MonkeyDisplay} from "@/components/MonkeyDisplay";
 import { Monkeys } from "@/mock/monkeys";
-import { useGlobalSearchParams } from "expo-router";
+import {Href, useGlobalSearchParams, useRouter} from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import useChimpDatabase from "@/database/chimpService";
 import { Monkey } from "@/models/Monkey";
@@ -15,6 +15,13 @@ const monkeyDetails = () => {
     const { getChimpById, updateHungry } = useChimpDatabase();
     const [monkey, setMonkey] = useState<Monkey>();
     const [food, setFood] = useState<number>(1);
+
+    const router = useRouter();
+
+    const handleNavigate = (route: Href) => {
+        router.navigate(route);
+    }
+
 
     const getChimp = useCallback(async (id: number) => {
         try {
@@ -91,7 +98,7 @@ const monkeyDetails = () => {
                     <Text style={styles.interactionText}>Dormir</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.interaction} onPress={()=>console.log("teste789")}>
+                <TouchableOpacity style={styles.interaction} onPress={() => handleNavigate("/game_center")}>
                     <Image source={require("../assets/images/controller.png")}></Image>
                     <Text style={styles.interactionText}>Brincar</Text>
                 </TouchableOpacity>
