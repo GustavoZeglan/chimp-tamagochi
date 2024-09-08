@@ -101,7 +101,7 @@ export function useChimpDatabase() {
     }
 
 
-    return { createChimp, getChimps, getLastChimp, getChimpById, updateHungry, updateSleep }
+    return { createChimp, getChimps, getLastChimp, getChimpById, updateHungry, updateSleep, updateFun }
 
 }
 

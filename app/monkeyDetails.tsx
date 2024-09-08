@@ -12,12 +12,14 @@ import { Foods } from "@/mock/foods";
 const monkeyDetails = () => {
 
     const { id } = useGlobalSearchParams();
-    const { getChimpById, updateHungry, updateSleep } = useChimpDatabase();
+    const { getChimpById, updateHungry, updateSleep, updateFun } = useChimpDatabase();
     const [monkey, setMonkey] = useState<Monkey>();
-    const [food, setFood] = useState<number>(1);
+    const [food, setFood] = useState<number>(0);
     const [image, setImage] = useState<ImageBackgroundProps>(Monkeys[monkey?.skin ?? 0].idle);
     const [isSleeping, setIsSleeping] = useState<boolean>(false);
-    const [sleepStatus, setSleepStatus] = useState<number>(0);
+    const [sleepStatus, setSleepStatus] = useState<number>(1);
+    const [fun, setFun] = useState<number>(1);
+    const [hungry, setHungry] = useState<number>(1);
 
     const router = useRouter();
 
@@ -34,6 +36,8 @@ const monkeyDetails = () => {
                 setMonkey(res);
                 setImage(Monkeys[res.skin].idle);
                 setSleepStatus(res.sleep);
+                setHungry(res.hungry);
+                setFun(res.fun);
             }
 
         } catch(e) {
@@ -67,7 +71,7 @@ const monkeyDetails = () => {
     const handleFood = () => {
         let newNumber;
         do {
-            newNumber = Math.floor(Math.random() * (Foods.length + 1));
+            newNumber = Math.floor(Math.random() * (Foods.length));
             console.log(newNumber);
         } while (newNumber === food);
         setFood(newNumber);
@@ -77,9 +81,17 @@ const monkeyDetails = () => {
         await updateSleep(id, status);
     }, []);
 
+    const updateFunInDB = useCallback(async (id: number, status: number) => {
+        await updateFun(id, status);
+    },[]);
+
+    const updateHungryInDB = useCallback(async (id: number, status: number) => {
+        await updateHungry(id, status);
+    },[]);
+
     useEffect(() => {
         getChimp(Number(id));
-    }, [id, food]);
+    }, [id]);
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
@@ -122,14 +134,45 @@ const monkeyDetails = () => {
         return;
     };
 
-
+    useEffect(() => {
+        let decreaseInterval: NodeJS.Timeout;
+    
+        decreaseInterval = setInterval(() => {
+            if (monkey?.id) {
+                setSleepStatus((prevStatus) => {
+                    const newStatus = Math.max(prevStatus - 1, 0);
+                    updateSleepInDB(monkey.id, newStatus);
+                    return newStatus;
+                });
+    
+                setFun((prevStatus) => {
+                    const newStatus = Math.max(prevStatus - 1, 0);
+                    updateFunInDB(monkey.id, newStatus);
+                    return newStatus;
+                });
+    
+                setHungry((prevStatus) => {
+                    const newStatus = Math.max(prevStatus - 1, 0);
+                    updateHungryInDB(monkey.id, newStatus);
+                    return newStatus;
+                });
+            } else {
+                console.error("Monkey ID is not valid.");
+            }
+        }, 10000);
+    
+        return () => {
+            clearInterval(decreaseInterval);
+        };
+    }, [updateSleepInDB, updateFunInDB, updateHungryInDB, monkey?.id]);
+    
     return (
         <SafeAreaView style={styles.container}>
             <Header title={"Sala de Cuidados"}></Header>
             <View style={styles.statusCardContainer}>
-                <StatusCard status={"Fome"} image={require("../assets/images/food.png")} value={monkey?.hungry ?? 0}></StatusCard>
+                <StatusCard status={"Fome"} image={require("../assets/images/food.png")} value={hungry}></StatusCard>
                 <StatusCard status={"Sono"} image={require("../assets/images/Bed.png")} value={sleepStatus}></StatusCard>
-                <StatusCard status={"Emoção"} image={require("../assets/images/Smiling.png")} value={monkey?.fun ?? 0}></StatusCard>
+                <StatusCard status={"Emoção"} image={require("../assets/images/Smiling.png")} value={fun}></StatusCard>
             </View>
             <View style={styles.monkeyInfoContainer}>
                 <Text style={styles.textStatus}>Feliz</Text>
