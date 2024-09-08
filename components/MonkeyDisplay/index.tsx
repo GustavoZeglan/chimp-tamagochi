@@ -1,18 +1,16 @@
-import { MonkeyAssets } from "@/models/Monkey"
-import { Image, ImageBackground } from "react-native"
-import { ResizeMode, Video } from "expo-av";
+import { ImageBackground, ImageBackgroundProps } from "react-native"
 import {styles} from "./styles";
 
 interface MonkeyDisplayProps {
-    monkey: MonkeyAssets
+    image: ImageBackgroundProps
 }
 
-export const MonkeyDisplay = ({monkey}: MonkeyDisplayProps) => {
+export const MonkeyDisplay = ({image}: MonkeyDisplayProps) => {
 
     return (
         <>
             <ImageBackground source={require("../../assets/images/MonkeyDisplay.png")} style={styles.Container}>
-                <ImageBackground ref={null} source={monkey.idle} style={styles.Video}/>
+                <ImageBackground ref={null} source={image} style={styles.Video}/>
             </ImageBackground>
         </>
     )

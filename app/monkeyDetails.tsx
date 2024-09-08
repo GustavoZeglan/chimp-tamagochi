@@ -1,4 +1,4 @@
-import {Image, ImageSourcePropType, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, ImageBackgroundProps, ImageSourcePropType, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Header from "@/components/Header";
 import StatusCard from "@/components/StatusCard/StatusCard";
 import {MonkeyDisplay} from "@/components/MonkeyDisplay";
@@ -12,9 +12,12 @@ import { Foods } from "@/mock/foods";
 const monkeyDetails = () => {
 
     const { id } = useGlobalSearchParams();
-    const { getChimpById, updateHungry } = useChimpDatabase();
+    const { getChimpById, updateHungry, updateSleep } = useChimpDatabase();
     const [monkey, setMonkey] = useState<Monkey>();
     const [food, setFood] = useState<number>(1);
+    const [image, setImage] = useState<ImageBackgroundProps>(Monkeys[monkey?.skin ?? 0].idle);
+    const [isSleeping, setIsSleeping] = useState<boolean>(false);
+    const [sleepStatus, setSleepStatus] = useState<number>(0);
 
     const router = useRouter();
 
@@ -29,6 +32,8 @@ const monkeyDetails = () => {
             const res = await getChimpById(id);  
             if (res) {
                 setMonkey(res);
+                setImage(Monkeys[res.skin].idle);
+                setSleepStatus(res.sleep);
             }
 
         } catch(e) {
@@ -68,9 +73,54 @@ const monkeyDetails = () => {
         setFood(newNumber);
     }
 
+    const updateSleepInDB = useCallback(async (id: number, status: number) => {
+        await updateSleep(id, status);
+    }, []);
+
     useEffect(() => {
         getChimp(Number(id));
     }, [id, food]);
+
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+
+        if (isSleeping) {
+            interval = setInterval(() => {
+                setSleepStatus((prevStatus) => {
+                    const newStatus = prevStatus + 1;
+                    
+                    if (newStatus >= 100) {
+                        setIsSleeping(false); 
+                        setImage(Monkeys[monkey?.skin ?? 0].idle);
+                        clearInterval(interval);
+                    } else {
+                        updateSleepInDB(monkey?.id ?? 0, newStatus);
+                    }
+
+                    return newStatus;
+                });
+            }, 1000);
+        }
+
+        return () => clearInterval(interval);
+    }, [isSleeping, monkey?.id]);
+
+    const handleSleepImage = () => {
+        if (!isSleeping) {
+            setImage(Monkeys[monkey?.skin ?? 0].sitting);
+
+            setTimeout(() => {
+                setImage(Monkeys[monkey?.skin ?? 0].sit);
+            }, 2000);
+
+            setIsSleeping(true);
+            return;
+        }
+
+        setImage(Monkeys[monkey?.skin ?? 0].idle);
+        setIsSleeping(false);
+        return;
+    };
 
 
     return (
@@ -78,12 +128,12 @@ const monkeyDetails = () => {
             <Header title={"Sala de Cuidados"}></Header>
             <View style={styles.statusCardContainer}>
                 <StatusCard status={"Fome"} image={require("../assets/images/food.png")} value={monkey?.hungry ?? 0}></StatusCard>
-                <StatusCard status={"Sono"} image={require("../assets/images/Bed.png")} value={monkey?.sleep ?? 0}></StatusCard>
+                <StatusCard status={"Sono"} image={require("../assets/images/Bed.png")} value={sleepStatus}></StatusCard>
                 <StatusCard status={"Emoção"} image={require("../assets/images/Smiling.png")} value={monkey?.fun ?? 0}></StatusCard>
             </View>
             <View style={styles.monkeyInfoContainer}>
                 <Text style={styles.textStatus}>Feliz</Text>
-                <MonkeyDisplay monkey={Monkeys[monkey?.skin ?? 0]}></MonkeyDisplay>
+                <MonkeyDisplay image={image}></MonkeyDisplay>
                 <Text style={styles.monkeyName}>{monkey?.name}</Text>
             </View>
             <View style={styles.interactionContainer}>
@@ -93,7 +143,7 @@ const monkeyDetails = () => {
                     <Text style={styles.interactionText}>Comer</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.interaction}  onPress={() => console.log("Bah...")}>
+                <TouchableOpacity style={styles.interaction}  onPress={() => handleSleepImage()}>
                     <Image source={require("../assets/images/sleep.png")}></Image>
                     <Text style={styles.interactionText}>Dormir</Text>
                 </TouchableOpacity>

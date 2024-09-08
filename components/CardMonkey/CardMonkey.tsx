@@ -8,7 +8,6 @@ type MonkeyProps = {
     monkey: Monkey
 }
 
-
 const CardMonkey = ({monkey}:MonkeyProps) => {
 
     const calcularStatusAtual = (fome:number,sono:number,emocao:number) : string => {
@@ -37,7 +36,7 @@ const CardMonkey = ({monkey}:MonkeyProps) => {
         <View style={styles.cardContainer}>
             <Text style={styles.textMonkeyName}>{monkey.name}</Text>
             <Text style={styles.statusText} >{calcularStatusAtual(monkey.hungry,monkey.sleep,monkey.fun)}</Text>
-            <MonkeyDisplay monkey={Monkeys[monkey.skin]}></MonkeyDisplay>
+            <MonkeyDisplay image={Monkeys[monkey.skin].idle}></MonkeyDisplay>
             <View style={styles.statusCardsContainer}>
                 <StatusCard status={"Fome"} image={require("../../assets/images/foodWhite.png")} value={monkey.hungry}/>
                 <StatusCard status={"Sono"} image={require("../../assets/images/sleepicon.png")} value={monkey.sleep}/>
