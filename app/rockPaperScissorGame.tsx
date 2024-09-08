@@ -1,11 +1,18 @@
 import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {useState} from "react";
+import {Href, useRouter} from "expo-router";
 
 
 const rockPaperScissorGame =() => {
 
     const [resultado,setResultado] = useState<string>();
     const [randomChoice,setRandomChoice] = useState<string>();
+
+    const router = useRouter();
+    const handleNavigate = (route: Href) => {
+        router.navigate(route);
+    }
+
 
     const options = ["Rock","Paper","Scissor"];
 
@@ -62,6 +69,9 @@ const rockPaperScissorGame =() => {
                 <Text style={styles.randomChoiceText}>{randomChoice}</Text>
                 <Text style={resultado === "Você Ganhou :)" ? styles.resultTextWinner : styles.resultTextLoser}>{resultado}</Text>
             </View>
+            <TouchableOpacity style={styles.backButton} onPress={()=>handleNavigate("..")}>
+                <Text style={styles.backButtonText}>Voltar</Text>
+            </TouchableOpacity>
         </SafeAreaView>
     )
 }
@@ -74,7 +84,9 @@ const styles = StyleSheet.create({
     randomChoiceText:{fontSize:14,color:"white",fontFamily:"PressStart2P"},
     resultContainer: {display:"flex",gap:8,alignItems:"center"},
     resultTextLoser: {fontSize:14,fontFamily:"PressStart2P",color:"red"},
-    resultTextWinner: {fontSize:14,fontFamily:"PressStart2P",color:"green"}
+    resultTextWinner: {fontSize:14,fontFamily:"PressStart2P",color:"green"},
+    backButton: {width: "100%",padding:16,backgroundColor:"#7F8EA7",borderRadius:8,marginTop:24},
+    backButtonText: {fontSize:18,color:"white",fontFamily:"PressStart2P",textAlign:"center"}
 })
 
 export default rockPaperScissorGame;
