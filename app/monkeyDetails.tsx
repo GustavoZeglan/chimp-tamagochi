@@ -66,8 +66,8 @@ const monkeyDetails = () => {
         setFood(newNumber);
     }
 
-    const sleep = useCallback(async (id: number, n: number) => {
-        await updateSleep(id, n);
+    const updateSleepInDB = useCallback(async (id: number, status: number) => {
+        await updateSleep(id, status);
     }, []);
 
     useEffect(() => {
@@ -76,35 +76,45 @@ const monkeyDetails = () => {
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
-    
+
         if (isSleeping) {
             interval = setInterval(() => {
-                setSleepStatus((prevSeconds) => prevSeconds + 1);
-            }, 3000); // 3000 milissegundos = 3 segundos
-        
-            sleep(monkey?.id ?? 0, sleepStatus);
+                setSleepStatus((prevStatus) => {
+                    const newStatus = prevStatus + 1;
+                    
+                    if (newStatus >= 100) {
+                        setIsSleeping(false); 
+                        setImage(Monkeys[monkey?.skin ?? 0].idle);
+                        clearInterval(interval);
+                    } else {
+                        updateSleepInDB(monkey?.id ?? 0, newStatus);
+                    }
+
+                    return newStatus;
+                });
+            }, 1000);
         }
-        
-        return () => clearInterval(interval);  // Certifique-se de limpar o intervalo
-    }, [isSleeping]);
 
-    const handleSleep = () => {
+        return () => clearInterval(interval);
+    }, [isSleeping, monkey?.id]);
 
+    const handleSleepImage = () => {
         if (!isSleeping) {
             setImage(Monkeys[monkey?.skin ?? 0].sitting);
 
             setTimeout(() => {
                 setImage(Monkeys[monkey?.skin ?? 0].sit);
-            }, 2000); // 2000 milissegundos = 2 segundos
+            }, 2000);
 
             setIsSleeping(true);
-            return;    
-        } 
-          
+            return;
+        }
+
         setImage(Monkeys[monkey?.skin ?? 0].idle);
         setIsSleeping(false);
         return;
-    }
+    };
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -126,7 +136,7 @@ const monkeyDetails = () => {
                     <Text style={styles.interactionText}>Comer</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.interaction}  onPress={() => handleSleep()}>
+                <TouchableOpacity style={styles.interaction}  onPress={() => handleSleepImage()}>
                     <Image source={require("../assets/images/sleep.png")}></Image>
                     <Text style={styles.interactionText}>Dormir</Text>
                 </TouchableOpacity>
