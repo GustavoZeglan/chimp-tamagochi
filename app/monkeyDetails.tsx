@@ -98,7 +98,7 @@ const monkeyDetails = () => {
                     <Text style={styles.interactionText}>Dormir</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.interaction} onPress={() => handleNavigate("/game_center")}>
+                <TouchableOpacity style={styles.interaction} onPress={() => handleNavigate({pathname:"/game_center",params: {id : id}})}>
                     <Image source={require("../assets/images/controller.png")}></Image>
                     <Text style={styles.interactionText}>Brincar</Text>
                 </TouchableOpacity>
