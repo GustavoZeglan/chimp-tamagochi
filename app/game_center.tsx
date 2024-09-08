@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button";
 import PlayButton from "@/components/PlayButton";
 import { View, Text, StyleSheet } from "react-native";
-import { Href, useRouter } from "expo-router";
+import {Href, useGlobalSearchParams, useRouter} from "expo-router";
 
 
 const styles = StyleSheet.create({
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
 export default function GameCenter() {
 
     const navigation = useRouter();
+    const {id} = useGlobalSearchParams();
     
 
     const handleNavigate = (route: Href) => {
@@ -34,9 +35,9 @@ export default function GameCenter() {
     return (
         <View style={styles.Container}>
             <Text style={styles.Title}>Macaqueie comigo</Text>
-            <PlayButton onPress={() => handleNavigate("/rockPaperScissorGame")} title="Pedra Papel Tesoura" />
+            <PlayButton onPress={() => handleNavigate({pathname:"/rockPaperScissorGame",params:{id: id}})} title="Pedra Papel Tesoura" />
             <PlayButton onPress={() => handleNavigate("/")} title="Pega Banana" />
-            <Button onPress={() => handleNavigate("/")} text="Voltar" isPrimary={false}/>
+            <Button onPress={() => handleNavigate("..")} text="Voltar" isPrimary={false}/>
         </View>
     );
 }
