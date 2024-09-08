@@ -73,7 +73,20 @@ export function useChimpDatabase() {
         }
     }
 
-    return { createChimp, getChimps, getLastChimp, getChimpById, updateHungry }
+    async function updateFun(id: number, fun: number) {
+        const query = await db.prepareAsync(`
+            INSERT INTO chimp SET fun = $fun WHERE id = $id
+        `);
+        try{
+            await query.executeAsync({$id:id,$fun:fun});
+        }catch(e){
+            throw e;
+        }finally{
+            query.finalizeSync();
+        }
+    }
+
+    return { createChimp, getChimps, getLastChimp, getChimpById, updateHungry,updateFun}
 
 }
 
