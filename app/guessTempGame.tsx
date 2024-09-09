@@ -1,16 +1,24 @@
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Href, useRouter} from "expo-router";
 
 const guessTempGame = () => {
+
+    const router = useRouter();
+
+    const handleNavigate = (route : Href) => {
+        router.navigate(route);
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Adivinhe a Temperatura</Text>
             <Text style={styles.supText}>Como jogar?</Text>
             <Text style={styles.descriptionText}>O jogo consiste em descobrir qual é a temperatura atual baseado em sua localização</Text>
-            <TextInput style={styles.textInput} placeholder={"Insira seu chute"} placeholderTextColor={"black"}></TextInput>
+            <TextInput keyboardType={"numeric"} style={styles.textInput} placeholder={"Insira seu chute"} placeholderTextColor={"black"}></TextInput>
             <TouchableOpacity style={styles.button}>
                 <Text style={{color:"white",fontFamily:"PressStart2P"}}>Chutar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.backButton}>
+            <TouchableOpacity style={styles.backButton} onPress={()=>handleNavigate("..")}>
                 <Text style={{color:"white",fontFamily:"PressStart2P"}}>Voltar</Text>
             </TouchableOpacity>
         </View>
