@@ -2,10 +2,10 @@ import { Monkey } from "@/models/Monkey";
 import { useSQLiteContext } from "expo-sqlite";
 
 export function useChimpDatabase() {
-    
+
     const db = useSQLiteContext();
 
-    const createChimp = async ({name, skin}: {name: string, skin: number}) => {
+    const createChimp = async ({ name, skin }: { name: string, skin: number }) => {
 
         const statement = await db.prepareAsync(`
             INSERT INTO chimp(name, skin, hungry, sleep, fun, lastUpdate) VALUES ($name, $skin, 75, 75, 75, $lastUpdate);
@@ -18,23 +18,23 @@ export function useChimpDatabase() {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
-          });
+        });
 
         try {
-            await statement.executeAsync({$name:name, $skin:skin, $lastUpdate: date});
+            await statement.executeAsync({ $name: name, $skin: skin, $lastUpdate: date });
         } catch (e) {
             console.error(e);
         } finally {
             statement.finalizeSync();
         }
-    } 
+    }
 
     async function getChimps() {
         try {
             const response = await db.getAllAsync<Monkey>(`SELECT * FROM chimp;`);
-            
+
             return response;
-        } catch(e) {
+        } catch (e) {
             throw e;
         }
     }
@@ -42,9 +42,9 @@ export function useChimpDatabase() {
     async function getLastChimp() {
         try {
             const response = await db.getFirstAsync<Monkey>(`SELECT * FROM chimp ORDER BY id DESC LIMIT 1;`);
-            
+
             return response;
-        } catch(e) {
+        } catch (e) {
             throw e;
         }
     }
@@ -53,20 +53,31 @@ export function useChimpDatabase() {
         try {
             const query = `SELECT * FROM chimp WHERE id = ?`;
             const res = await db.getFirstAsync<Monkey>(query, id);
-            
+
             return res;
-        } catch(e) {
+        } catch (e) {
             throw e;
         }
     }
 
     async function updateHungry(id: number, hungry: number) {
-        
-        const statement = await db.prepareAsync(`UPDATE chimp SET hungry = $hungry WHERE id = $id`);
-        
+
+        const date = new Date().toLocaleString('pt-BR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+
+        console.log(date);
+
+        const statement = await db.prepareAsync(`UPDATE chimp SET hungry = $hungry, lastUpdate = $lastUpdate WHERE id = $id`);
+
         try {
-            await statement.executeAsync({$hungry:hungry, $id:id});
-        } catch(e) {
+            await statement.executeAsync({ $hungry: hungry, $lastUpdate: date, $id: id });
+        } catch (e) {
             throw e;
         } finally {
             statement.finalizeSync();
@@ -74,25 +85,48 @@ export function useChimpDatabase() {
     }
 
     async function updateFun(id: number, fun: number) {
+
+        const date = new Date().toLocaleString('pt-BR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+
+        console.log(date);
+
         const query = await db.prepareAsync(`
-            UPDATE chimp SET fun = $fun WHERE id = $id
+            UPDATE chimp SET fun = $fun, lastUpdate = $lastUpdate WHERE id = $id
         `);
-        try{
-            await query.executeAsync({$id:id,$fun:fun});
-        }catch(e){
+        try {
+            await query.executeAsync({ $id: id, $fun: fun, $lastUpdate: date });
+        } catch (e) {
             throw e;
-        }finally{
+        } finally {
             query.finalizeSync();
         }
     }
 
     async function updateSleep(id: number, sleep: number) {
 
-        const statement = await db.prepareAsync(`UPDATE chimp SET sleep = $sleep WHERE id = $id`);
-        
+        const date = new Date().toLocaleString('pt-BR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+
+        console.log(date);
+
+        const statement = await db.prepareAsync(`UPDATE chimp SET sleep = $sleep, lastUpdate = $lastUpdate WHERE id = $id`);
+
         try {
-            await statement.executeAsync({$sleep:sleep, $id:id});
-        } catch(e) {
+            await statement.executeAsync({ $sleep: sleep, $lastUpdate: date, $id: id });
+        } catch (e) {
             throw e;
         } finally {
             statement.finalizeSync();
