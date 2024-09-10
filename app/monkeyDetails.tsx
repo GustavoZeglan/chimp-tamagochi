@@ -30,7 +30,6 @@ const monkeyDetails = () => {
 
     const getChimp = useCallback(async (id: number) => {
         try {
-
             const res = await getChimpById(id);  
             if (res) {
                 setMonkey(res);

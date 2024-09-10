@@ -1,7 +1,8 @@
 import {StyleSheet, View, Text, SafeAreaView, Image} from "react-native";
 import {Button} from "@/components/Button";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { Href, useRouter } from "expo-router";
+import useChimpDatabase from "@/database/chimpService";
 
 const styles = StyleSheet.create({
     Container: {
@@ -39,10 +40,23 @@ export default function StartPage() {
 
     const navigation = useRouter();
 
+    const { decreaseAllStatus } = useChimpDatabase();
+
+    const decreaseAll = useCallback(async () => {
+        try {
+            await decreaseAllStatus();
+        } catch(e) {
+            console.error(e);
+        }
+    },[]);
 
     const handleNavigate = (route: Href) => {
         navigation.push(route);
     }
+
+    useEffect(() => {
+        decreaseAll();
+    },[]);
 
     return (
         <SafeAreaView style={styles.Container}>

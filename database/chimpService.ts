@@ -5,23 +5,49 @@ export function useChimpDatabase() {
 
     const db = useSQLiteContext();
 
+    const decreaseAllStatus = async () => {
+
+        const chimps = await getChimps();
+    
+        for (const chimp of chimps) {
+            const minutesPassed = (Date.now() - new Date(chimp.lastUpdate).getTime()) / (1000 * 60 * 60);
+            console.log(minutesPassed);
+
+            if (Math.floor(minutesPassed) >= 1) {
+
+                const statement = await db.prepareAsync(
+                    "UPDATE chimp SET hungry = $hungry, fun = $fun, sleep = $sleep, lastUpdate = $lastUpdate WHERE id = $id"
+                );
+    
+                try {
+                    await statement.executeAsync({
+                        $hungry: Math.max(0, chimp.hungry - Math.floor(minutesPassed) * 10),
+                        $fun: Math.max(0, chimp.fun - Math.floor(minutesPassed) * 10),
+                        $sleep: Math.max(0, chimp.sleep - Math.floor(minutesPassed) * 10),
+                        $updated_at: new Date().toISOString(), // Atualiza com a data atual
+                        $id: chimp.id
+                    });
+                    console.log(Math.max(0, chimp.hungry - Math.floor(minutesPassed) * 10),);
+                    console.log(Math.max(0, chimp.fun - Math.floor(minutesPassed) * 10),);
+                    console.log(Math.max(0, chimp.sleep - Math.floor(minutesPassed) * 10),);
+                } catch (error) {
+                    throw error;
+                } finally {
+                    await statement.finalizeAsync();
+                }
+            }
+        }
+
+    }
+
     const createChimp = async ({ name, skin }: { name: string, skin: number }) => {
 
         const statement = await db.prepareAsync(`
-            INSERT INTO chimp(name, skin, hungry, sleep, fun, lastUpdate) VALUES ($name, $skin, 75, 75, 75, $lastUpdate);
+            INSERT INTO chimp(name, skin, hungry, sleep, fun, lastUpdate) VALUES ($name, $skin, 70, 70, 70, $lastUpdate);
         `);
 
-        const date = new Date().toLocaleString('pt-BR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
-
         try {
-            await statement.executeAsync({ $name: name, $skin: skin, $lastUpdate: date });
+            await statement.executeAsync({ $name: name, $skin: skin, $lastUpdate: new Date().toISOString() });
         } catch (e) {
             console.error(e);
         } finally {
@@ -62,21 +88,10 @@ export function useChimpDatabase() {
 
     async function updateHungry(id: number, hungry: number) {
 
-        const date = new Date().toLocaleString('pt-BR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
-
-        console.log(date);
-
         const statement = await db.prepareAsync(`UPDATE chimp SET hungry = $hungry, lastUpdate = $lastUpdate WHERE id = $id`);
 
         try {
-            await statement.executeAsync({ $hungry: hungry, $lastUpdate: date, $id: id });
+            await statement.executeAsync({ $hungry: hungry, $lastUpdate: new Date().toISOString(), $id: id });
         } catch (e) {
             throw e;
         } finally {
@@ -86,22 +101,11 @@ export function useChimpDatabase() {
 
     async function updateFun(id: number, fun: number) {
 
-        const date = new Date().toLocaleString('pt-BR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
-
-        console.log(date);
-
         const query = await db.prepareAsync(`
             UPDATE chimp SET fun = $fun, lastUpdate = $lastUpdate WHERE id = $id
         `);
         try {
-            await query.executeAsync({ $id: id, $fun: fun, $lastUpdate: date });
+            await query.executeAsync({ $id: id, $fun: fun, $lastUpdate: new Date().toISOString() });
         } catch (e) {
             throw e;
         } finally {
@@ -111,21 +115,11 @@ export function useChimpDatabase() {
 
     async function updateSleep(id: number, sleep: number) {
 
-        const date = new Date().toLocaleString('pt-BR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
-
-        console.log(date);
 
         const statement = await db.prepareAsync(`UPDATE chimp SET sleep = $sleep, lastUpdate = $lastUpdate WHERE id = $id`);
 
         try {
-            await statement.executeAsync({ $sleep: sleep, $lastUpdate: date, $id: id });
+            await statement.executeAsync({ $sleep: sleep, $lastUpdate: new Date().toISOString(), $id: id });
         } catch (e) {
             throw e;
         } finally {
@@ -135,7 +129,7 @@ export function useChimpDatabase() {
     }
 
 
-    return { createChimp, getChimps, getLastChimp, getChimpById, updateHungry, updateSleep, updateFun }
+    return { createChimp, getChimps, getLastChimp, getChimpById, updateHungry, updateSleep, updateFun, decreaseAllStatus }
 
 }
 
