@@ -1,4 +1,4 @@
-import {FlatList, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import Header from "@/components/Header";
 import {MonkeyDisplay} from "@/components/MonkeyDisplay";
 import {Monkeys} from "@/mock/monkeys";
@@ -12,7 +12,7 @@ const adoptScreen = () => {
     const navigation = useRouter();
 
     const [name, setName] = useState<string>("");
-    const [skin, setSkin] = useState<number>();
+    const [skin, setSkin] = useState<number>(0);
     const { createChimp, getLastChimp } = useChimpDatabase();
 
     const create = async () => {
@@ -29,7 +29,19 @@ const adoptScreen = () => {
         }
     }
 
-    const handleSkin = (index: number) => {
+    const handleLeftSkin = () => {
+        const index: number = skin - 1;
+        if (index < 0) {
+            return;
+        }
+        setSkin(index);
+    }
+
+    const handleRightSkin = () => {
+        const index: number = skin + 1;
+        if (index >= Monkeys.length) {
+            return;
+        }
         setSkin(index);
     }
 
@@ -39,12 +51,13 @@ const adoptScreen = () => {
             <View style={styles.skinContainer}>
                 <Text style={styles.skinText}>Selecione a Aparência</Text>
                 <View style={styles.skinSelectionContainer}>
-                    <FlatList horizontal={true} data={Monkeys} renderItem={({item, index}) => (
-                        <TouchableOpacity onPress={() => handleSkin(index)}>
-                            <MonkeyDisplay image={item.idle}></MonkeyDisplay>
-                        </TouchableOpacity>
-                    )}>
-                    </FlatList>
+                    <TouchableOpacity style={styles.touchableArrowsImages} onPress={handleLeftSkin}>
+                        <ImageBackground source={require("@/assets/images/Back.png")} style={styles.arrowsImages}/>
+                    </TouchableOpacity>
+                    <MonkeyDisplay image={Monkeys[skin].idle}/>
+                    <TouchableOpacity style={styles.touchableArrowsImages} onPress={handleRightSkin}>
+                        <ImageBackground source={require("@/assets/images/Forward.png")} style={styles.arrowsImages}/>
+                    </TouchableOpacity>
 
                 </View>
             </View>
@@ -109,6 +122,13 @@ const styles = StyleSheet.create({
     skins: {
         backgroundColor: "blue"
     },
-
+    touchableArrowsImages: {
+        height: 56,
+        width: 56
+    },
+    arrowsImages: {
+        height: "100%",
+        width: "100%"
+    }
 })
 export default adoptScreen;
