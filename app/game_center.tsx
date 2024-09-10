@@ -36,7 +36,7 @@ export default function GameCenter() {
         <View style={styles.Container}>
             <Text style={styles.Title}>Macaqueie comigo</Text>
             <PlayButton onPress={() => handleNavigate({pathname:"/rockPaperScissorGame",params:{id: id}})} title="Pedra Papel Tesoura" />
-            <PlayButton onPress={() => handleNavigate("/guessTempGame")} title="Adivinhe a Temperatura" />
+            <PlayButton onPress={() => handleNavigate({pathname:"/guessTempGame",params:{id: id}})} title="Adivinhe a Temperatura" />
             <Button onPress={() => handleNavigate("..")} text="Voltar" isPrimary={false}/>
         </View>
     );
