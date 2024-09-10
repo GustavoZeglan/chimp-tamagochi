@@ -8,7 +8,7 @@ import {Href, useRouter} from "expo-router";
 
 const monkeyList = () => {
 
-    const {getChimps} = useChimpDatabase();
+    const {getChimps, decreaseAllStatus} = useChimpDatabase();
     const [monkeys,setMonkeys] = useState<Monkey[]>();
 
     const navigation = useRouter();
@@ -19,6 +19,7 @@ const monkeyList = () => {
 
     const getAllMonkeys = async () => {
         try{
+            await decreaseAllStatus();
             const response = await getChimps();
             setMonkeys(response);
         }catch(error){

@@ -1,8 +1,10 @@
-import {StyleSheet, Text, View} from "react-native"
+import {ImageBackgroundProps, StyleSheet, Text, View} from "react-native"
 import {Monkey} from "@/models/Monkey";
 import {MonkeyDisplay} from "@/components/MonkeyDisplay";
 import {Monkeys} from "@/mock/monkeys";
 import StatusCard from "@/components/StatusCard/StatusCard";
+import { calcularStatusAtual } from "@/utils/calculateActualStatus";
+import { useEffect, useState } from "react";
 
 type MonkeyProps = {
     monkey: Monkey
@@ -10,33 +12,29 @@ type MonkeyProps = {
 
 const CardMonkey = ({monkey}:MonkeyProps) => {
 
-    const calcularStatusAtual = (fome:number,sono:number,emocao:number) : string => {
-        const resultado : number = fome+sono+emocao;
-        let status : string = "";
-        if(resultado == 0){
-            status = "Morto";
-        }else if(resultado <= 50){
-            status = "Crítico";
-        }else if(resultado <= 100){
-            status = "Muito Triste";
-        }else if(resultado <= 150){
-            status = "Triste";
-        }else if(resultado <= 200){
-            status = "Ok";
-        }else if(resultado <= 250){
-            status = "Bem";
-        }else{
-            status = "Muito bem";
-        }
-        return status;
+    const [image, setImage] = useState<ImageBackgroundProps>(Monkeys[monkey.skin].idle);
 
-    }
+    useEffect(() => {
+        if (calcularStatusAtual(monkey.hungry, monkey.sleep, monkey.fun) == "Morto") {
+            setImage(require("@/assets/images/tombstone.png"));
+            return;
+        }
+
+        if (calcularStatusAtual(monkey.hungry, monkey.sleep, monkey.fun) === "Crítico" || calcularStatusAtual(monkey.hungry, monkey.sleep, monkey.fun) === "Muito Triste" || calcularStatusAtual(monkey.hungry, monkey.sleep, monkey.fun) === "Triste") {
+            setImage(Monkeys[monkey?.skin ?? 0].cry);
+            return;
+        } 
+
+        if (calcularStatusAtual(monkey.hungry, monkey.sleep, monkey.fun) === "Bem" || calcularStatusAtual(monkey.hungry, monkey.sleep, monkey.fun) == "OK" || calcularStatusAtual(monkey.hungry, monkey.sleep, monkey.fun) === "Muito Bem") {
+            setImage(Monkeys[monkey?.skin ?? 0].idle);
+        }
+    },[]);
 
     return (
         <View style={styles.cardContainer}>
             <Text style={styles.textMonkeyName}>{monkey.name}</Text>
             <Text style={styles.statusText} >{calcularStatusAtual(monkey.hungry,monkey.sleep,monkey.fun)}</Text>
-            <MonkeyDisplay image={Monkeys[monkey.skin].idle}></MonkeyDisplay>
+            <MonkeyDisplay image={image}></MonkeyDisplay>
             <View style={styles.statusCardsContainer}>
                 <StatusCard status={"Fome"} image={require("../../assets/images/foodWhite.png")} value={monkey.hungry}/>
                 <StatusCard status={"Sono"} image={require("../../assets/images/sleepicon.png")} value={monkey.sleep}/>

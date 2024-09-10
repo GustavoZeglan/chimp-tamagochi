@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import useChimpDatabase from "@/database/chimpService";
 import { Monkey } from "@/models/Monkey";
 import { Foods } from "@/mock/foods";
+import { calcularStatusAtual } from "@/utils/calculateActualStatus";
 
 const monkeyDetails = () => {
 
@@ -55,9 +56,11 @@ const monkeyDetails = () => {
                 await updateHungry(id, 100);  
                 handleFood();
                 getChimp(id);
+                setIsSleeping(false);
                 return;
             }
 
+            setIsSleeping(false);
             await updateHungry(id, monkey!.hungry + 10);
             handleFood();  
             getChimp(id);
@@ -90,6 +93,26 @@ const monkeyDetails = () => {
     useEffect(() => {
         getChimp(Number(id));
     }, [id]);
+
+    useEffect(() => {
+
+        if (!isSleeping) {
+            if (calcularStatusAtual(hungry, sleepStatus, fun) == "Morto") {
+                setImage(require("@/assets/images/tombstone.png"));
+                return;
+            }
+    
+            if (calcularStatusAtual(hungry, sleepStatus, fun) === "Crítico" || calcularStatusAtual(hungry, sleepStatus, fun) === "Muito Triste" || calcularStatusAtual(hungry, sleepStatus, fun) === "Triste") {
+                setImage(Monkeys[monkey?.skin ?? 0].cry);
+                return;
+            } 
+    
+            if (calcularStatusAtual(hungry, sleepStatus, fun) === "Bem" || calcularStatusAtual(hungry, sleepStatus, fun) == "OK" || calcularStatusAtual(hungry, sleepStatus, fun) === "Muito Bem") {
+                setImage(Monkeys[monkey?.skin ?? 0].idle);
+            }
+        }
+
+    },[hungry, fun, sleepStatus]);
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
@@ -157,7 +180,7 @@ const monkeyDetails = () => {
             } else {
                 console.error("Monkey ID is not valid.");
             }
-        }, 10000);
+        }, 5000);
     
         return () => {
             clearInterval(decreaseInterval);
@@ -173,7 +196,7 @@ const monkeyDetails = () => {
                 <StatusCard status={"Emoção"} image={require("../assets/images/Smiling.png")} value={fun}></StatusCard>
             </View>
             <View style={styles.monkeyInfoContainer}>
-                <Text style={styles.textStatus}>Feliz</Text>
+                <Text style={styles.textStatus}>{calcularStatusAtual(hungry, sleepStatus, fun)}</Text>
                 <MonkeyDisplay image={image}></MonkeyDisplay>
                 <Text style={styles.monkeyName}>{monkey?.name}</Text>
             </View>

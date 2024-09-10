@@ -9,7 +9,11 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    Video: {
+    ImageContainer: {
+        width: 172,
+        height: 172,
+    },
+    Image: {
         width: 172,
         height: 172,
     }

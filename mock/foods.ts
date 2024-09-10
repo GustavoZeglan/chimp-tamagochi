@@ -12,5 +12,5 @@ export const Foods: ImageSourcePropType[] = [
     require("@/assets/images/foods/raspberry.png"),
     require("@/assets/images/foods/watermelon.png"),
     require("@/assets/images/foods/whisk.png"),
-    require("@/assets/images/banana.png"),
+    require("@/assets/images/foods/banana.png"),
 ] 
