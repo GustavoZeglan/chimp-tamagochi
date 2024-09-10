@@ -48,6 +48,7 @@ const guessTempGame = () => {
             https://api.weatherapi.com/v1/current.json?key=2ce57ca1d0494c4b8fb224433241906&q=${lat},${lon}8&aqi=no
             `);
             setWeather(response.data.current.temp_c);
+            console.log(response.data.current.temp_c);
         }catch(error){
             console.log(error);
         }

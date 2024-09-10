@@ -71,7 +71,6 @@ const monkeyDetails = () => {
         let newNumber;
         do {
             newNumber = Math.floor(Math.random() * (Foods.length));
-            console.log(newNumber);
         } while (newNumber === food);
         setFood(newNumber);
     }

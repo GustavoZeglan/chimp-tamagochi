@@ -17,7 +17,7 @@ const adoptScreen = () => {
 
     const create = async () => {
         try {
-            if (skin) {
+            if (skin >= 0 || skin <= Monkeys.length) {
                 await createChimp({name, skin});
                 const chimp = await getLastChimp();
                 navigation.push({pathname: "/monkeyDetails", params:{id: chimp?.id}});
