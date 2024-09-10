@@ -5,7 +5,7 @@ import useChimpDatabase from "@/database/chimpService";
 import {Monkey} from "@/models/Monkey";
 
 
-const rockPaperScissorGame =() => {
+const rockPaperScissorGame = () => {
 
     const {updateFun,getChimpById} = useChimpDatabase();
     const {id} = useGlobalSearchParams();
