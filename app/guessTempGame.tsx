@@ -1,13 +1,19 @@
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
-import {Href, useRouter} from "expo-router";
+import {Href, useGlobalSearchParams, useRouter} from "expo-router";
 import axios from "axios";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import * as Location from "expo-location";
+import useChimpDatabase from "@/database/chimpService";
+import {Monkey} from "@/models/Monkey";
 
 
 
 
 const guessTempGame = () => {
+
+
+    const {id} = useGlobalSearchParams();
+    const {getChimpById,updateFun} = useChimpDatabase();
 
     const [weather,setWeather] = useState();
     const [lat,setLat] = useState<number>();
@@ -15,6 +21,7 @@ const guessTempGame = () => {
     const [resultado,setResultado] = useState<string>();
     const [errorMsg,setErrorMsg] = useState("");
     const [chute,setChute] = useState<number>();
+    const [monkey,setMonkey] = useState<Monkey>();
 
     const router = useRouter();
 
@@ -49,13 +56,57 @@ const guessTempGame = () => {
     const compareChute = async () => {
         if(chute === weather) {
            setResultado("Acertou!");
+            await handleVictoryFun();
         }else {
             setResultado("Errou");
+            await handleDefeatFun();
         }
+    }
+
+    const getChimp = useCallback(async (id: number) => {
+        try {
+
+            const res = await getChimpById(id);
+            if (res) {
+                setMonkey(res);
+            }
+
+        } catch(e) {
+            console.error(e);
+        }
+    },[monkey]);
+
+    const handleVictoryFun = async () => {
+        if(monkey?.fun && monkey.fun === 100) {
+            return;
+        }
+        if(monkey?.fun && monkey.fun + 10 >= 100) {
+            await updateFun(Number(id),100);
+            getChimp(Number(id));
+            return;
+        }
+        await updateFun(Number(id),monkey!.fun + 10);
+        getChimp(Number(id));
+        return;
+    }
+
+    const handleDefeatFun = async () => {
+        if(monkey?.fun && monkey.fun === 0) {
+            return ;
+        }
+        if(monkey?.fun && monkey.fun  - 1 <= 0) {
+            await updateFun(Number(id),0);
+            getChimp(Number(id));
+            return ;
+        }
+        await updateFun(Number(id),monkey!.fun - 1);
+        getChimp(Number(id));
+        return;
     }
 
 
     useEffect(() => {
+        getChimp(Number(id));
         getPermissionLocation()
     },[])
     useEffect(() => {
